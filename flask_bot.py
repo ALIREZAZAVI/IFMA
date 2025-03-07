@@ -147,13 +147,13 @@ def post_news_to_group(group_key, news_items, source):
             final_message = f'<a href="{url}">{translated_message}</a>'
             logging.info(f"Final Message for {source}: {final_message}")
 
-            # Send the message via Telegram
-            if topic_id:
-                bot.send_message(group_id, final_message, parse_mode="HTML", message_thread_id=topic_id)
-            elif channel_id:
-                bot.send_message(channel_id, final_message, parse_mode="HTML")
-            else:
-                bot.send_message(group_id, final_message, parse_mode="HTML")
+            # # Send the message via Telegram
+            # if topic_id:
+            #     bot.send_message(group_id, final_message, parse_mode="HTML", message_thread_id=topic_id)
+            # elif channel_id:
+            #     bot.send_message(channel_id, final_message, parse_mode="HTML")
+            # else:
+            #     bot.send_message(group_id, final_message, parse_mode="HTML")
 
             # Update the global latest news message (use a lock for thread safety)
             with latest_news_lock:
