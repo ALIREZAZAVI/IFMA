@@ -3,7 +3,7 @@ import fetch from 'node-fetch';
 
 const telegramAuthToken = '7626220362:AAHP1a0zWjLRdmpzqfnbf2iXPd1iX538alI';
 const webhookEndpoint = "/endpoint";
-const channelId = "-1002337862544";
+const channelId = "-1002337862544"; // کانال شما
 const PORT = 3000;
 
 function findAvailablePort(port) {
@@ -109,7 +109,8 @@ async function processUpdate(update) {
                 const telegramResponse = await fetch(telegramUrl);
 
                 if (!telegramResponse.ok) {
-                    throw new Error(`Error sending message: ${telegramResponse.statusText}`);
+                    const errorText = await telegramResponse.text(); // دریافت متن خطا
+                    throw new Error(`Error sending message: ${telegramResponse.statusText}, ${errorText}`);
                 }
 
             } catch (error) {
