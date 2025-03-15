@@ -1,4 +1,4 @@
-const telegramAuthToken = `telegram_token`;
+const telegramAuthToken = `7626220362:AAHP1a0zWjLRdmpzqfnbf2iXPd1iX538alI`;
 const webhookEndpoint = "/endpoint";
 const channelId = "-1002337862544";
 
