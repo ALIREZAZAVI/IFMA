@@ -22,19 +22,7 @@ def scrape_news_topic_8():
 
     # Free proxies taken from free-proxy-list.net (example list)
     PROXIES_LIST = [
-        "http://65.108.159.129:8080",
-        "http://13.36.104.85:80",
-        "http://13.36.87.105:3128",
-        "http://3.126.147.182:80",
-        "http://43.202.154.212:80",
-        "http://35.76.62.196:80",
-        "http://104.225.220.233:80",   # US, elite proxy
-        "http://18.223.25.15:80",       # US, elite proxy
-        "http://44.219.175.186:80",      # US, elite proxy
-        "http://3.129.184.210:80",       # US, elite proxy
-        "http://3.141.217.225:80",       # US, elite proxy
-        "http://47.254.36.213:8443"      # US, elite proxy
-        # Add more proxies as needed
+        "https://t.me/proxy?server=51.75.30.128&port=443&secret=7izFZ7UvHzwkSWc1qzYO80NzMy5hbWF6",
     ]
 
     # Create a cycle iterator for the proxy list
