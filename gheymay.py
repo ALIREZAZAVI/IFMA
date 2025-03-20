@@ -35,7 +35,7 @@ export default {
 
         ws.onopen = () => {
           console.log("✅ WebSocket متصل شد!");
-          reconnectAttempts = 0; // ریست شمارش تلاش‌ها
+          reconnectAttempts = 0; 
 
           // ارسال درخواست subscribe
           const subscribeMessage = {
@@ -46,7 +46,7 @@ export default {
           };
           ws.send(JSON.stringify(subscribeMessage));
 
-          // ارسال Ping برای جلوگیری از قطع اتصال
+        
           setInterval(() => {
             if (ws.readyState === WebSocket.OPEN) {
               ws.send(JSON.stringify({ method: "ping" }));
