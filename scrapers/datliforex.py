@@ -60,3 +60,28 @@ def scrape_news_topic_3():
 if __name__ == "__main__":
     scraped_news = scrape_news_topic_3()
     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
