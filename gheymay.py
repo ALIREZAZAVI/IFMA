@@ -7,7 +7,7 @@ export default {
       let ws;
       let reconnectAttempts = 0;
       const maxReconnectAttempts = 10;
-      const reconnectInterval = 5000; // ۵ ثانیه بین تلاش‌ها
+      const reconnectInterval = 5000;
 
       const symbols = [
         { symbol: "USDTIRT", title: "تتر", unit: "تومان" },
