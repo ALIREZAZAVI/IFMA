@@ -64,7 +64,7 @@ export default {
             for (const s of symbols) {
               const priceData = data.data[s.symbol];
               if (priceData) {
-                message += `🔹 *${s.title}:* ${priceData.last} ${s.unit}\n`;
+                message += `. *${s.title}:* ${priceData.last} ${s.unit}\n`;
               }
             }
 
