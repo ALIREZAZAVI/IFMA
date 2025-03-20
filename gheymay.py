@@ -3,12 +3,11 @@ import websockets
 import json
 import requests
 
-# اطلاعات اتصال
-WS_URL = "wss://wss.nobitex.ir/connection/websocket"
+# اطلاعات WebSocket نوبیتکس
+NOBITEX_WS_URL = "wss://ws.nobitex.ir/"
+# اطلاعات تلگرام
 TELEGRAM_BOT_TOKEN = "7876883134:AAHcBp0BuHXGz_HdVuSl0PWMcUlFaEtq84A"
-TELEGRAM_CHAT_ID = "@NEWSLIVEFOREX"  # مقدار صحیح برای ارسال به کانال تلگرام
-RECONNECT_DELAY = 5  # مدت زمان انتظار قبل از تلاش مجدد
-PING_INTERVAL = 30  # فاصله زمانی برای ارسال پینگ
+TELEGRAM_CHAT_ID = "@NEWSLIVEFOREX"
 
 # لیست ارزها
 symbols = [
@@ -27,14 +26,11 @@ symbols = [
     {"symbol": "DOTIRT", "title": "پولکادات", "unit": "تومان"},
 ]
 
-# تابع ارسال پیام به تلگرام
-def send_message_to_telegram(text):
+async def send_message_to_telegram(text):
+    """ارسال پیام به تلگرام"""
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
-    payload = {
-        "chat_id": TELEGRAM_CHAT_ID,
-        "text": text,
-        "parse_mode": "Markdown",
-    }
+    payload = {"chat_id": TELEGRAM_CHAT_ID, "text": text, "parse_mode": "Markdown"}
+
     try:
         response = requests.post(url, json=payload)
         result = response.json()
@@ -42,60 +38,55 @@ def send_message_to_telegram(text):
     except Exception as e:
         print("❌ خطای ارسال پیام به تلگرام:", e)
 
-# تابع اصلی WebSocket
-async def connect_websocket():
+async def connect_to_nobitex():
+    """اتصال به وب‌سوکت نوبیتکس و دریافت قیمت ارزها"""
     while True:
         try:
-            async with websockets.connect(WS_URL) as ws:
+            async with websockets.connect(NOBITEX_WS_URL) as ws:
                 print("✅ WebSocket متصل شد!")
 
-                # ارسال درخواست اشتراک (subscribe)
+                # ارسال احراز هویت (در صورتی که API نیاز داشته باشد)
+                auth_message = {"method": "login", "params": {"api_token": API_TOKEN}}
+                await ws.send(json.dumps(auth_message))
+
+                # ارسال درخواست اشتراک به کانال‌های قیمتی
                 subscribe_message = {
                     "method": "subscribe",
                     "params": {
-                        "channels": [f"ticker.{s['symbol']}" for s in symbols],
+                        "channels": [f"ticker.{s['symbol']}" for s in symbols]
                     },
                 }
                 await ws.send(json.dumps(subscribe_message))
 
-                # ارسال پینگ به صورت متناوب
-                async def send_ping():
+                # ارسال پینگ هر 30 ثانیه برای زنده نگه‌داشتن اتصال
+                async def ping():
                     while True:
-                        try:
-                            await asyncio.sleep(PING_INTERVAL)
-                            await ws.send(json.dumps({"method": "ping"}))
-                            print("📡 Ping ارسال شد.")
-                        except:
-                            break  # در صورت قطع ارتباط، حلقه متوقف می‌شود
+                        await asyncio.sleep(30)
+                        await ws.send(json.dumps({"method": "ping"}))
+                        print("📡 Ping ارسال شد.")
 
-                asyncio.create_task(send_ping())
+                asyncio.create_task(ping())
 
-                # دریافت و پردازش پیام‌ها
+                # پردازش پیام‌های دریافت‌شده
                 async for message in ws:
-                    try:
-                        data = json.loads(message)
-                        if not data or "data" not in data:
-                            continue
+                    data = json.loads(message)
 
-                        message_text = "📢 *قیمت لحظه‌ای ارزها:*\n"
-                        for s in symbols:
-                            price_data = data["data"].get(s["symbol"])
-                            if price_data:
-                                message_text += f". *{s['title']}:* {price_data['last']} {s['unit']}\n"
+                    if "data" not in data:
+                        continue
 
-                        send_message_to_telegram(message_text)
+                    text_message = "📢 *قیمت لحظه‌ای ارزها:*\n"
+                    for s in symbols:
+                        price_data = data["data"].get(s["symbol"])
+                        if price_data:
+                            text_message += f"⚡ *{s['title']}:* {price_data['last']} {s['unit']}\n"
 
-                    except Exception as e:
-                        print("⚠️ خطا در پردازش پیام:", e)
+                    # ارسال پیام به تلگرام
+                    await send_message_to_telegram(text_message)
 
         except Exception as e:
             print(f"❌ خطای WebSocket: {e}")
-            print(f"⏳ تلاش مجدد در {RECONNECT_DELAY} ثانیه...")
-            await asyncio.sleep(RECONNECT_DELAY)
-
-# اجرای WebSocket به صورت async
-async def main():
-    await connect_websocket()
+            print("⏳ تلاش مجدد در 5 ثانیه...")
+            await asyncio.sleep(5)  # تلاش مجدد پس از 5 ثانیه
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    asyncio.run(connect_to_nobitex())
