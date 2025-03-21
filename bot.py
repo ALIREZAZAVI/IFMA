@@ -9,6 +9,8 @@ from scrapers.myfxbook import scrape_news_topic_2
 from scrapers.datliforex import scrape_news_topic_3
 from scrapers.coinpotato import scrape_news_topic_8
 from scrapers.cointelegraph import scrape_news_topic_7
+ImportWarning
+
 
 forex_live_latest_news = ['123443f1']
 myfxbook_latest_news = ['123443f1']
