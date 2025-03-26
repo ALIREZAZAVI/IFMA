@@ -1,9 +1,6 @@
 import time
 import requests
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
-from webdriver_manager.chrome import ChromeDriverManager
+from bs4 import BeautifulSoup
 from telegram import Bot
 
 # تنظیمات تلگرام
@@ -15,48 +12,51 @@ def send_telegram_message(message):
     bot = Bot(token=TELEGRAM_BOT_TOKEN)
     bot.send_message(chat_id=CHAT_ID, text=message)
 
-# تنظیمات Selenium
-options = webdriver.ChromeOptions()
-options.add_argument("--headless")
-options.add_argument("--no-sandbox")
-options.add_argument("--disable-dev-shm-usage")
-
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-
 # ذخیره آخرین ردیف
 last_row_text = None
 
 while True:
     try:
-        driver.get("https://www.codal.ir/")  # لینک سایت
+        # دریافت صفحه
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36"
+        }
+        response = requests.get("https://www.codal.ir/", headers=headers, timeout=10)
+        response.raise_for_status()  # اگر خطای HTTP باشد، متوقف شود
         
+        # پردازش HTML
+        soup = BeautifulSoup(response.text, "html.parser")
+
         # پیدا کردن اولین ردیف
-        first_row = driver.find_element(By.XPATH, "//tr[@class='table__row ng-scope']")
-        columns = first_row.find_elements(By.TAG_NAME, "td")
-        
+        first_row = soup.select_one("tr.table__row.ng-scope")
+        if not first_row:
+            print("⚠️ ردیفی پیدا نشد")
+            time.sleep(60)
+            continue
+
+        columns = first_row.find_all("td")
         if len(columns) >= 7:
-            namad = columns[0].text.strip()
-            company = columns[1].text.strip()
-            title = columns[3].text.strip()
-            code = columns[4].text.strip()
-            send_time = columns[5].text.strip()
-            publish_time = columns[6].text.strip()
-            
-            try:
-                link_element = first_row.find_element(By.XPATH, ".//a[contains(@class, 'icon-file-eye')]")
-                link = link_element.get_attribute("href")
-            except:
-                link = "لینکی یافت نشد"
-            
+            namad = columns[0].get_text(strip=True)
+            company = columns[1].get_text(strip=True)
+            title = columns[3].get_text(strip=True)
+            code = columns[4].get_text(strip=True)
+            send_time = columns[5].get_text(strip=True)
+            publish_time = columns[6].get_text(strip=True)
+
+            # استخراج لینک
+            link_element = first_row.select_one("a.icon-file-eye")
+            link = link_element["href"] if link_element else "لینکی یافت نشد"
+
             row_text = f"نماد: {namad}\nشرکت: {company}\nعنوان: {title}\nکد: {code}\nزمان ارسال: {send_time}\nزمان انتشار: {publish_time}"
-            
+
             # اگر ردیف جدید بود، ارسال شود
             if row_text != last_row_text:
                 full_message = f"{row_text}\n🔗 مشاهده اطلاعیه: {link}"
                 send_telegram_message(full_message)
                 last_row_text = row_text
+                print("✅ پیام جدید ارسال شد")
 
     except Exception as e:
-        print("خطا:", e)
-    
+        print("🚨 خطا:", e)
+
     time.sleep(60)  # هر ۶۰ ثانیه بررسی شود
