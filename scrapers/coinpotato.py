@@ -1,13 +1,10 @@
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
-from itertools import cycle
 import time
 
 def scrape_news_topic_8():
     # --- Configuration ---
-
-    # Advanced headers mimicking a real browser
     HEADERS = {
         'User-Agent': ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
                        'AppleWebKit/537.36 (KHTML, like Gecko) '
@@ -20,34 +17,23 @@ def scrape_news_topic_8():
         'Connection': 'keep-alive'
     }
 
-    # Create a cycle iterator for the proxy list
-    proxies_cycle = cycle(PROXIES_LIST) if PROXIES_LIST else None
+    # If you are not using proxies, simply remove the proxy setup
+    # proxies_cycle = cycle(PROXIES_LIST) if PROXIES_LIST else None  # Removed
 
-    # URL to fetch
     base_url = "https://cryptopotato.com"
     url = f"{base_url}/crypto-news"
 
-    # Retry configuration
     MAX_RETRIES = 5
     DELAY_SECONDS = 2
 
-    # Create a persistent session with custom headers
     session = requests.Session()
     session.headers.update(HEADERS)
 
     page_content = None
     for attempt in range(1, MAX_RETRIES + 1):
         try:
-            # If proxies are available, use the next proxy from the cycle
-            if proxies_cycle:
-                current_proxy = next(proxies_cycle)
-                session.proxies.update({
-                    'http': current_proxy,
-                    'https': current_proxy,
-                })
-                print(f"Attempt {attempt}: Using proxy {current_proxy}")
-            else:
-                print(f"Attempt {attempt}: No proxy in use.")
+            # Just print attempt status without using proxies
+            print(f"Attempt {attempt}: No proxy in use.")
 
             # Make the GET request with a timeout
             response = session.get(url, timeout=10)
@@ -105,9 +91,9 @@ def scrape_news_topic_8():
     news = [{
         "title": title,
         "description": descriptions,
-        "tag": 'crypto_tag',
+        "tag": crypto_tag,  # Correctly pass the list, not a string
         "source": "CryptoPotato",
-        "link": "article_url"
+        "link": article_url  # Use the actual variable, not the string "article_url"
     }]
 
     print(news)
