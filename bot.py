@@ -15,7 +15,7 @@ from scrapers.reuters import scrape_news_topic_10
 forex_live_latest_news = ['123443f1']
 myfxbook_latest_news = ['123443f1']
 datilforex_latest_news = ['123443f1']
-coinpotato_lastest_news = ['123443f1']
+# coinpotato_lastest_news = ['123443f1']
 cointelegraph_lastest_news = ['123443f1']
 coinmarketcap_lastest_news = ['123443f1']
 reuters_lastest_news = ['123443f1']
