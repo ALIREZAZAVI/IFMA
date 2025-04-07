@@ -17,6 +17,11 @@ myfxbook_latest_news = ['123443f1']
 datilforex_latest_news = ['123443f1']
 coinpotato_lastest_news = ['123443f1']
 cointelegraph_lastest_news = ['123443f1']
+coinmarketcap_lastest_news = ['123443f1']
+reuters_lastest_news = ['123443f1']
+
+
+
 
 # Config
 BOT_TOKEN = '7626220362:AAHP1a0zWjLRdmpzqfnbf2iXPd1iX538alI'
@@ -30,6 +35,9 @@ GROUPS = {
     "dayliforex": {'id': '-1002337862544', 'topic': 'Topic 3' , 'topic_id' : '83' ,  'channel_id' : '@NEWSLIVEFOREX'},
     "coinpotato": {'id': '-1002337862544', 'topic': 'Topic 4' , 'topic_id' : '83' ,  'channel_id' : '@NEWSLIVEFOREX'},
     "cointelegraph": {'id': '-1002337862544', 'topic': 'Topic 5' , 'topic_id' : '83' ,  'channel_id' : '@NEWSLIVEFOREX'},
+    "coinmarketcap": {'id': '-1002337862544', 'topic': 'Topic 5' , 'topic_id' : '83' ,  'channel_id' : '@NEWSLIVEFOREX'},
+    "reuters": {'id': '-1002337862544', 'topic': 'Topic 5' , 'topic_id' : '83' ,  'channel_id' : '@NEWSLIVEFOREX'},
+
 }
 
 
@@ -216,6 +224,34 @@ def post_news_to_group(group_key, news_items , source):
                 cointelegraph_lastest_news.pop(0)
                 print(new_news)        
 
+
+            if (source == 'coinmarketcap'):
+
+                print(coinmarketcap_lastest_news[-1])
+                print(coinmarketcap_lastest_news[0])
+
+
+                coinmarketcap_lastest_news.append(url)
+                if (coinmarketcap_lastest_news[-1] == coinmarketcap_lastest_news[0]):
+                    new_news = False
+                
+                coinmarketcap_lastest_news.pop(0)
+                print(new_news)
+
+            if (source == 'reuters'):
+
+                print(reuters_lastest_news[-1])
+                print(reuters_lastest_news[0])
+
+
+                reuters_lastest_news.append(url)
+                if (reuters_lastest_news[-1] == reuters_lastest_news[0]):
+                    new_news = False
+                
+                reuters_lastest_news.pop(0)
+                print(new_news)
+
+
             
             # Translate the message text (excluding the URL)
             translated_message = translate_text(formatted_message, "fa")
@@ -257,10 +293,10 @@ def job_group_2():
     news = scrape_news_topic_2()
     post_news_to_group('myfxbook', news ,'myfxbook')
 
-
 def job_group_3():
     news = scrape_news_topic_3()
     post_news_to_group('dayliforex', news ,'dayliforex')
+
 def job_group_4():
      news = scrape_news_topic_7()
      post_news_to_group('cointelegraph', news , 'cointelegraph')    
@@ -269,7 +305,13 @@ def job_group_5():
      news = scrape_news_topic_8()
      post_news_to_group('coinpotato', news , 'coinpotato')
 
+def job_group_6():
+     news = scrape_news_topic_9()
+     post_news_to_group('coinmarketcap', news , 'coinmarketcap')     
 
+def job_group_7():
+     news = scrape_news_topic_10()
+     post_news_to_group('reuters', news , 'reuters')
 
 # Schedule jobs
 # schedule.every(1).hour.do(job_group_1)  # Every hour
@@ -279,6 +321,9 @@ schedule.every(5).seconds.do(job_group_2)
 schedule.every(5).seconds.do(job_group_3) 
 schedule.every(5).seconds.do(job_group_4) 
 schedule.every(5).seconds.do(job_group_5) 
+schedule.every(5).seconds.do(job_group_6) 
+schedule.every(5).seconds.do(job_group_7) 
+
 
 
 
