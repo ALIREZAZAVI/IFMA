@@ -29,26 +29,6 @@ def scrape_news_topic_8():
     session = requests.Session()
     session.headers.update(HEADERS)
 
-    page_content = None
-    for attempt in range(1, MAX_RETRIES + 1):
-        try:
-            # Just print attempt status without using proxies
-            print(f"Attempt {attempt}: No proxy in use.")
-
-            # Make the GET request with a timeout
-            response = session.get(url, timeout=10)
-            response.raise_for_status()  # Raise HTTPError for bad responses
-            print(f"Success on attempt {attempt}!")
-            page_content = response.text
-            break  # exit the loop if request is successful
-        except requests.exceptions.RequestException as e:
-            print(f"Attempt {attempt} failed with error: {e}")
-            time.sleep(DELAY_SECONDS)
-
-    if page_content is None:
-        print("All attempts failed. Could not fetch the page.")
-        return None
-
     # Parse the main news page
     soup = BeautifulSoup(page_content, 'html.parser')
 
