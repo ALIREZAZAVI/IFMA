@@ -222,6 +222,9 @@ def post_news_to_group(group_key, news_items , source):
                 coinmarketcap_lastest_news.pop(0)
                 print(new_news)
 
+
+
+
             if (source == 'reuters'):
 
                 print(reuters_lastest_news[-1])
