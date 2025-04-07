@@ -35,8 +35,8 @@ GROUPS = {
     "dayliforex": {'id': '-1002337862544', 'topic': 'Topic 3' , 'topic_id' : '83' ,  'channel_id' : '@NEWSLIVEFOREX'},
     "coinpotato": {'id': '-1002337862544', 'topic': 'Topic 4' , 'topic_id' : '83' ,  'channel_id' : '@NEWSLIVEFOREX'},
     "cointelegraph": {'id': '-1002337862544', 'topic': 'Topic 5' , 'topic_id' : '83' ,  'channel_id' : '@NEWSLIVEFOREX'},
-    "coinmarketcap": {'id': '-1002337862544', 'topic': 'Topic 5' , 'topic_id' : '83' ,  'channel_id' : '@NEWSLIVEFOREX'},
-    "reuters": {'id': '-1002337862544', 'topic': 'Topic 5' , 'topic_id' : '83' ,  'channel_id' : '@NEWSLIVEFOREX'},
+    "coinmarketcap": {'id': '-1002337862544', 'topic': 'Topic 6' , 'topic_id' : '83' ,  'channel_id' : '@NEWSLIVEFOREX'},
+    "reuters": {'id': '-1002337862544', 'topic': 'Topic 7' , 'topic_id' : '83' ,  'channel_id' : '@NEWSLIVEFOREX'},
 
 }
 
@@ -275,11 +275,8 @@ def post_news_to_group(group_key, news_items , source):
                     bot.send_message(channel_id, final_message, parse_mode="HTML")
                 # else:
                 #     bot.send_message(group_id, final_message, parse_mode='Markdown')
-
-    except Exception as e:
-        print(f"Error: {e}")
-        # ادامه کد با استفاده از continue برای جلوگیری از توقف کامل
-        return
+    except:
+        print('error')
 
 # Command to get group IDs
 @bot.message_handler(commands=['get_groups'])
