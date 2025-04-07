@@ -275,8 +275,11 @@ def post_news_to_group(group_key, news_items , source):
                     bot.send_message(channel_id, final_message, parse_mode="HTML")
                 # else:
                 #     bot.send_message(group_id, final_message, parse_mode='Markdown')
-    except:
-        print('error')
+
+    except Exception as e:
+        print(f"Error: {e}")
+        # ادامه کد با استفاده از continue برای جلوگیری از توقف کامل
+        return
 
 # Command to get group IDs
 @bot.message_handler(commands=['get_groups'])
@@ -320,7 +323,7 @@ schedule.every(5).seconds.do(job_group_1)
 schedule.every(5).seconds.do(job_group_2) 
 schedule.every(5).seconds.do(job_group_3) 
 schedule.every(5).seconds.do(job_group_4) 
-# schedule.every(5).seconds.do(job_group_5) 
+schedule.every(5).seconds.do(job_group_5) 
 schedule.every(5).seconds.do(job_group_6) 
 schedule.every(5).seconds.do(job_group_7) 
 
