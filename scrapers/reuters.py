@@ -70,4 +70,4 @@ def scrape_news_topic_9():
 
 # اجرای تابع
 if __name__ == "__main__":
-    scrape_news_topic_8()
+    scrape_news_topic_9()
