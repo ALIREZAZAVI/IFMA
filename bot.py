@@ -299,11 +299,11 @@ def job_group_6():
 # Schedule jobs
 # schedule.every(1).hour.do(job_group_1)  # Every hour
 # schedule.every(5).minutes.do(job_group_1) 
-# schedule.every(5).seconds.do(job_group_1) 
-# schedule.every(5).seconds.do(job_group_2) 
-# schedule.every(5).seconds.do(job_group_3) 
-# schedule.every(5).seconds.do(job_group_4) 
-# schedule.every(5).seconds.do(job_group_5) 
+schedule.every(5).seconds.do(job_group_1) 
+schedule.every(5).seconds.do(job_group_2) 
+schedule.every(5).seconds.do(job_group_3) 
+schedule.every(5).seconds.do(job_group_4) 
+schedule.every(5).seconds.do(job_group_5) 
 schedule.every(5).seconds.do(job_group_6) 
 
 
