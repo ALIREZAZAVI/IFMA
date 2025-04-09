@@ -259,6 +259,7 @@ def job_group_2():
 def job_group_3():
     news = scrape_news_topic_3()
     post_news_to_group('dayliforex', news ,'dayliforex')
+    
 def job_group_4():
      news = scrape_news_topic_7()
      post_news_to_group('cointelegraph', news , 'cointelegraph')    
