@@ -4,7 +4,7 @@ import time
 import requests
 from googletrans import Translator
 import re
-# from scrapers.forexlive import scrape_news_topic_1
+from scrapers.forexlive import scrape_news_topic_1
 from scrapers.myfxbook import scrape_news_topic_2
 from scrapers.datliforex import scrape_news_topic_3
 from scrapers.coinpotato import scrape_news_topic_8
