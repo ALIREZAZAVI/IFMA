@@ -1,11 +1,13 @@
-from os import name
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
+from itertools import cycle
 import time
 
 def scrape_news_topic_8():
     # --- Configuration ---
+
+    # Advanced headers mimicking a real browser
     HEADERS = {
         'User-Agent': ('Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
                        'AppleWebKit/537.36 (KHTML, like Gecko) '
@@ -18,23 +20,51 @@ def scrape_news_topic_8():
         'Connection': 'keep-alive'
     }
 
-    # If you are not using proxies, simply remove the proxy setup
-    # proxies_cycle = cycle(PROXIES_LIST) if PROXIES_LIST else None  # Removed
+    # Free proxies taken from free-proxy-list.net (example list)
+    PROXIES_LIST = [
+        "http://65.108.159.129:8080",
+        "http://13.36.104.85:80",
+        "http://13.36.87.105:3128",
+        "http://3.126.147.182:80",
+        "http://43.202.154.212:80",
+        "http://35.76.62.196:80",
+        "http://104.225.220.233:80",   # US, elite proxy
+        "http://18.223.25.15:80",       # US, elite proxy
+        "http://44.219.175.186:80",      # US, elite proxy
+        "http://3.129.184.210:80",       # US, elite proxy
+        "http://3.141.217.225:80",       # US, elite proxy
+        "http://47.254.36.213:8443"      # US, elite proxy
+        # Add more proxies as needed
+    ]
 
+    # Create a cycle iterator for the proxy list
+    proxies_cycle = cycle(PROXIES_LIST) if PROXIES_LIST else None
+
+    # URL to fetch
     base_url = "https://cryptopotato.com"
     url = f"{base_url}/crypto-news"
 
+    # Retry configuration
     MAX_RETRIES = 5
     DELAY_SECONDS = 2
 
+    # Create a persistent session with custom headers
     session = requests.Session()
     session.headers.update(HEADERS)
 
     page_content = None
     for attempt in range(1, MAX_RETRIES + 1):
         try:
-            # Just print attempt status without using proxies
-            print(f"Attempt {attempt}: No proxy in use.")
+            # If proxies are available, use the next proxy from the cycle
+            if proxies_cycle:
+                current_proxy = next(proxies_cycle)
+                session.proxies.update({
+                    'http': current_proxy,
+                    'https': current_proxy,
+                })
+                print(f"Attempt {attempt}: Using proxy {current_proxy}")
+            else:
+                print(f"Attempt {attempt}: No proxy in use.")
 
             # Make the GET request with a timeout
             response = session.get(url, timeout=10)
@@ -92,16 +122,16 @@ def scrape_news_topic_8():
     news = [{
         "title": title,
         "description": descriptions,
-        "tag": crypto_tag,  # Correctly pass the list, not a string
+        "tag": 'crypto_tag',
         "source": "CryptoPotato",
-        "link": article_url  # Use the actual variable, not the string "article_url"
+        "link": "article_url"
     }]
 
     print(news)
     return news
 
 # Example usage
-if name == "main":
+if __name__ == "__main__":
     news = scrape_news_topic_8()
     if news:
         print(news)
