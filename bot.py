@@ -9,12 +9,18 @@ from scrapers.myfxbook import scrape_news_topic_2
 from scrapers.datliforex import scrape_news_topic_3
 from scrapers.coinpotato import scrape_news_topic_8
 from scrapers.cointelegraph import scrape_news_topic_7
+from scrapers.reuters import scrape_news_topic_9
+
+
+
 
 forex_live_latest_news = ['123443f1']
 myfxbook_latest_news = ['123443f1']
 datilforex_latest_news = ['123443f1']
 coinpotato_lastest_news = ['123443f1']
 cointelegraph_lastest_news = ['123443f1']
+reuters_lastest_news = ['123443f1']
+
 
 # Config
 BOT_TOKEN = '7626220362:AAHP1a0zWjLRdmpzqfnbf2iXPd1iX538alI'
@@ -28,6 +34,8 @@ GROUPS = {
     "dayliforex": {'id': '-1002337862544', 'topic': 'Topic 3' , 'topic_id' : '83' ,  'channel_id' : '@NEWSLIVEFOREX'},
     "coinpotato": {'id': '-1002337862544', 'topic': 'Topic 4' , 'topic_id' : '83' ,  'channel_id' : '@NEWSLIVEFOREX'},
     "cointelegraph": {'id': '-1002337862544', 'topic': 'Topic 5' , 'topic_id' : '83' ,  'channel_id' : '@NEWSLIVEFOREX'},
+    "reuters": {'id': '-1002337862544', 'topic': 'Topic 6' , 'topic_id' : '83' ,  'channel_id' : '@NEWSLIVEFOREX'},
+
 }
 
 
@@ -212,7 +220,23 @@ def post_news_to_group(group_key, news_items , source):
                     new_news = False
                 
                 cointelegraph_lastest_news.pop(0)
-                print(new_news)        
+                print(new_news)      
+
+
+
+
+            if (source == 'reuters'):
+
+                print(reuters_lastest_news[-1])
+                print(reuters_lastest_news[0])
+
+
+                reuters_lastest_news.append(url)
+                if (reuters_lastest_news[-1] == reuters_lastest_news[0]):
+                    new_news = False
+                
+                reuters_lastest_news.pop(0)
+                print(new_news)  
 
             
             # Translate the message text (excluding the URL)
@@ -267,6 +291,9 @@ def job_group_5():
      news = scrape_news_topic_8()
      post_news_to_group('coinpotato', news , 'coinpotato')
 
+def job_group_6():
+     news = scrape_news_topic_9()
+     post_news_to_group('reuters', news , 'reuters')
 
 
 # Schedule jobs
@@ -277,7 +304,7 @@ schedule.every(5).seconds.do(job_group_2)
 schedule.every(5).seconds.do(job_group_3) 
 schedule.every(5).seconds.do(job_group_4) 
 schedule.every(5).seconds.do(job_group_5) 
-
+schedule.every(5).seconds.do(job_group_6) 
 
 
 
